@@ -1,4 +1,4 @@
-import { AffineConfig, AffinePoints, affineWarp, loadSvgAsImageData } from "homography.ts";
+import { AffineConfig, AffinePoints, affineWarp, loadSvgAsImageData } from "@homography.ts/core";
 
 async function main() {
   const imageUrl = new URL("../example-image.svg", import.meta.url);

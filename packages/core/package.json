@@ -1,0 +1,48 @@
+{
+  "name": "@homography.ts/core",
+  "version": "0.1.0",
+  "license": "MIT",
+  "packageManager": "pnpm@8.15.4",
+  "scripts": {
+    "build": "tshy",
+    "dev": "nodemon --ext ts --watch src/ --exec pnpm build",
+    "prepack": "tshy",
+    "cwd": "pwd"
+  },
+  "files": [
+    "dist"
+  ],
+  "tshy": {
+    "exports": {
+      "./package.json": "./package.json",
+      ".": "./src/index.ts"
+    }
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/index.d.ts",
+        "default": "./dist/commonjs/index.js"
+      }
+    }
+  },
+  "main": "./dist/commonjs/index.js",
+  "types": "./dist/commonjs/index.d.ts",
+  "type": "module",
+  "dependencies": {
+    "delaunator": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/delaunator": "^5.0.2",
+    "nodemon": "^3.1.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-organize-imports": "^3.2.4",
+    "tshy": "^1.11.1",
+    "typescript": "^5.3.3"
+  }
+}

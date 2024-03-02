@@ -1,21 +1,19 @@
 {
-  "name": "homography.ts",
+  "name": "@homography.ts/examples",
   "version": "0.1.0",
-  "description": "",
-  "keywords": [],
-  "author": "",
   "license": "MIT",
   "scripts": {
-    "serve": "parcel index.html"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "packageManager": "pnpm@8.15.4",
   "dependencies": {
-    "homography.ts": "file:.."
+    "@homography.ts/core": "workspace:*"
   },
   "devDependencies": {
-    "parcel": "^2.12.0",
     "prettier": "^3.2.5",
     "prettier-plugin-organize-imports": "^3.2.4",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4"
   }
 }
