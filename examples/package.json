@@ -1,0 +1,21 @@
+{
+  "name": "homography.ts",
+  "version": "0.1.0",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "serve": "parcel index.html"
+  },
+  "packageManager": "pnpm@8.15.4",
+  "dependencies": {
+    "homography.ts": "file:.."
+  },
+  "devDependencies": {
+    "parcel": "^2.12.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-organize-imports": "^3.2.4",
+    "typescript": "^5.3.3"
+  }
+}

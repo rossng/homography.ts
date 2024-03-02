@@ -41,7 +41,7 @@ export function affineWarp(config: AffineConfig): ImageData {
   return applyAffineTransformToImage(image, affineMatrix);
 }
 
-function applyAffineTransformToImage(image: ImageData, matrix: Float32Array): ImageData {
+function applyAffineTransformToImage(image: ImageData, matrix: ArrayLike<number>): ImageData {
   const result = new ImageData(image.width, image.height, {
     colorSpace: image.colorSpace,
   });
@@ -51,10 +51,13 @@ function applyAffineTransformToImage(image: ImageData, matrix: Float32Array): Im
       const [x, y] = applyAffineTransformToPoint(matrix, i, j);
       const x_ = Math.floor(x);
       const y_ = Math.floor(y);
-      result.data[4 * (j * image.width + i)] = image.data[4 * (y_ * image.width + x_)];
-      result.data[4 * (j * image.width + i) + 1] = image.data[4 * (y_ * image.width + x_) + 1];
-      result.data[4 * (j * image.width + i) + 2] = image.data[4 * (y_ * image.width + x_) + 2];
-      result.data[4 * (j * image.width + i) + 3] = image.data[4 * (y_ * image.width + x_) + 3];
+      if (x_ >= image.width || x_ < 0 || y_ >= image.height || y_ < 0) {
+        continue;
+      }
+      result.data[4 * (y_ * image.width + x_)] = image.data[4 * (j * image.width + i)]!;
+      result.data[4 * (y_ * image.width + x_) + 1] = image.data[4 * (j * image.width + i) + 1]!;
+      result.data[4 * (y_ * image.width + x_) + 2] = image.data[4 * (j * image.width + i) + 2]!;
+      result.data[4 * (y_ * image.width + x_) + 3] = image.data[4 * (j * image.width + i) + 3]!;
     }
   }
 
@@ -62,12 +65,15 @@ function applyAffineTransformToImage(image: ImageData, matrix: Float32Array): Im
 }
 
 function applyAffineTransformToPoint(
-  matrix: Float32Array,
+  matrix: ArrayLike<number>,
   x: number,
   y: number,
 ): [x: number, y: number] {
-  const x_ = matrix[0] * x + matrix[1] * y + matrix[2];
-  const y_ = matrix[3] * x + matrix[4] * y + matrix[5];
+  if (matrix.length < 6) {
+    throw new Error("Matrix must have 6 elements");
+  }
+  const x_ = matrix[0]! * x + matrix[1]! * y + matrix[2]!;
+  const y_ = matrix[3]! * x + matrix[4]! * y + matrix[5]!;
   return [x_, y_];
 }
 
@@ -82,7 +88,7 @@ function applyAffineTransformToPoint(
  *
  * => trans = dst . src^-1
  */
-function affineMatrixFromTriangles(src: AffinePoints, dst: AffinePoints): Float32Array {
+function affineMatrixFromTriangles(src: AffinePoints, dst: AffinePoints): ArrayLike<number> {
   // This represents a row-major 3x3 matrix
   const srcMatrix = new Float32Array(6);
   srcMatrix[0] = src[0]; // x1
@@ -180,4 +186,25 @@ function affineMatrixFromTriangles(src: AffinePoints, dst: AffinePoints): Float3
   affineMatrix[8] = 1;
 
   return affineMatrix;
+}
+
+export function loadSvgAsImageData(svgUrl: string): Promise<ImageData> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Failed to get 2D context"));
+        return;
+      }
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      resolve(imageData);
+    };
+    img.onerror = () => reject(new Error("Failed to load SVG"));
+    img.src = svgUrl;
+  });
 }
