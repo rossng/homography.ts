@@ -42,9 +42,11 @@ export function affineWarp(config: AffineConfig): ImageData {
 }
 
 function applyAffineTransformToImage(image: ImageData, matrix: ArrayLike<number>): ImageData {
-  const result = new ImageData(image.width, image.height, {
-    colorSpace: image.colorSpace,
-  });
+  const result = image.colorSpace
+    ? new ImageData(image.width, image.height, {
+        colorSpace: image.colorSpace,
+      })
+    : new ImageData(image.width, image.height);
 
   for (let i = 0; i < image.width; i++) {
     for (let j = 0; j < image.height; j++) {
