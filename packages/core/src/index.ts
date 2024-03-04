@@ -1,3 +1,5 @@
+import { Matrix3x3 } from "./matrix.js";
+
 export type Transform = "auto" | "piecewiseaffine" | "affine" | "projective";
 
 export interface AffineConfig {
@@ -100,48 +102,7 @@ function affineMatrixFromTriangles(src: AffinePoints, dst: AffinePoints): ArrayL
   srcMatrix[4] = src[3]; // y2
   srcMatrix[5] = src[5]; // y3
 
-  /*
-    The determinant of a 3x3 matrix is calculated as follows:
-
-        | a b c |
-        | d e f |     => det = a(ei − fh) − b(di − fg) + c(dh − eg)
-        | g h i |
-     */
-  const determinant =
-    srcMatrix[0] * (srcMatrix[4] - srcMatrix[5]) -
-    srcMatrix[1] * (srcMatrix[3] - srcMatrix[5]) +
-    srcMatrix[2] * (srcMatrix[3] - srcMatrix[4]);
-
-  /*
-    The inverse of a 3x3 matrix is calculated as follows:
-
-        | a b c |^-1            | ei − fh  ch - bi  bf − ce |
-        | d e f |   = 1/|det| * | fg − di  ai − cg  cd − af |
-        | g h i |               | dh − eg  bg − ah  ae − bd |
-
-    Therefore:
-
-        | a b c |^-1            | e-f  c-b  bf-ce |
-        | d e f |   = 1/|det| * | f-d  a-c  cd-af |
-        | 1 1 1 |               | d-e  b-a  ae-bd |
-
-    Indices: 
-
-        | 0 1 2 |     | 4-5 2-1 1*5-2*4 |
-        | 3 4 5 |  => | 5-3 0-2 2*3-0*5 |
-        |       |     | 3-4 0-2 0*4-1*3 |
-     */
-
-  const invSrcMatrix = new Float32Array(9);
-  invSrcMatrix[0] = (srcMatrix[4] - srcMatrix[5]) / determinant;
-  invSrcMatrix[1] = (srcMatrix[2] - srcMatrix[1]) / determinant;
-  invSrcMatrix[2] = (srcMatrix[1] * srcMatrix[5] - srcMatrix[2] * srcMatrix[4]) / determinant;
-  invSrcMatrix[3] = (srcMatrix[5] - srcMatrix[3]) / determinant;
-  invSrcMatrix[4] = (srcMatrix[0] - srcMatrix[2]) / determinant;
-  invSrcMatrix[5] = (srcMatrix[2] * srcMatrix[3] - srcMatrix[0] * srcMatrix[5]) / determinant;
-  invSrcMatrix[6] = (srcMatrix[3] - srcMatrix[4]) / determinant;
-  invSrcMatrix[7] = (srcMatrix[0] - srcMatrix[2]) / determinant;
-  invSrcMatrix[8] = (srcMatrix[0] * srcMatrix[4] - srcMatrix[1] * srcMatrix[3]) / determinant;
+  const invSrcMatrix = Matrix3x3.inverse(srcMatrix);
 
   const dstMatrix = new Float32Array(6);
   dstMatrix[0] = dst[0]; // x'1
