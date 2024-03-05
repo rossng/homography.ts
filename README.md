@@ -6,6 +6,9 @@ A TypeScript library for finding and applying transformations to images.
 
 This library is an early-stage experiment and should not be used by anyone for anything.
 
+![](docs/before.png)
+![](docs/after.png)
+
 ## Usage
 
 - Install Node and (preferably) enable Corepack with `corepack enable`.
