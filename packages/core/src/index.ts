@@ -92,7 +92,7 @@ function applyAffineTransformToPoint(
  *
  * => trans = dst . src^-1
  */
-function affineMatrixFromTriangles(src: AffinePoints, dst: AffinePoints): ArrayLike<number> {
+export function affineMatrixFromTriangles(src: AffinePoints, dst: AffinePoints): ArrayLike<number> {
   // This represents a row-major 3x3 matrix
   const srcMatrix = new Float32Array(6);
   srcMatrix[0] = src[0]; // x1
