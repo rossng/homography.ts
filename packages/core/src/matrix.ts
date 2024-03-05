@@ -66,7 +66,7 @@ export namespace Matrix3x3 {
       inverse[4] = (matrix[0] - matrix[2]) / determinant;
       inverse[5] = (matrix[2] * matrix[3] - matrix[0] * matrix[5]) / determinant;
       inverse[6] = (matrix[3] - matrix[4]) / determinant;
-      inverse[7] = (matrix[0] - matrix[2]) / determinant;
+      inverse[7] = (matrix[1] - matrix[0]) / determinant;
       inverse[8] = (matrix[0] * matrix[4] - matrix[1] * matrix[3]) / determinant;
       return inverse;
     }

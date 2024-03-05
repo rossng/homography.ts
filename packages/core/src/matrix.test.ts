@@ -17,11 +17,16 @@ describe("matrix", () => {
         [1, 0, 0, 0, 1, 0, 1, 1, 1],
         [1, 0, 0, 0, 1, 0, -1, -1, 1],
       ],
+      [
+        [1, 0, 0, 0, 1, 0],
+        [1, 0, 0, 0, 1, 0, -1, -1, 1],
+      ],
     ])("inverse(%o) -> %o", (matrix, expected) => {
       const inverse = makeZeroesPositive(Array.from(Matrix3x3.inverse(matrix)));
       const doubleInverse = makeZeroesPositive(Array.from(Matrix3x3.inverse(inverse)));
+      const originalMatrix = matrix.length === 9 ? matrix : [...matrix, 1, 1, 1];
       expect(inverse).toStrictEqual(expected);
-      expect(doubleInverse).toStrictEqual(matrix);
+      expect(doubleInverse).toStrictEqual(originalMatrix);
     });
 });
 
